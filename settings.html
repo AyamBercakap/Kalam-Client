@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+          sans-serif;
+        background: #121212;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .settings-container {
+        background: #1e1e1e;
+        border-radius: 12px;
+        padding: 30px;
+        width: 100%;
+        max-width: 400px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        animation: fadeIn 0.5s ease-out;
+        border: 1px solid #333;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .header h2 {
+        color: #ffffff;
+        font-size: 28px;
+        font-weight: 600;
+        margin-bottom: 5px;
+      }
+
+      .header p {
+        color: #aaa;
+        font-size: 14px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #ccc;
+        font-weight: 500;
+        font-size: 14px;
+      }
+
+      .input-group {
+        position: relative;
+        margin-bottom: 5px;
+      }
+
+      input {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #444;
+        border-radius: 8px;
+        font-size: 14px;
+        font-family: 'Poppins', sans-serif;
+        transition: all 0.3s ease;
+        background: #2a2a2a;
+        color: #ffffff;
+      }
+
+      input:focus {
+        outline: none;
+        border-color: #666;
+        box-shadow: 0 0 0 3px rgba(100, 100, 100, 0.1);
+      }
+
+      input::placeholder {
+        color: #777;
+      }
+
+      .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #aaa;
+        cursor: pointer;
+        font-size: 18px;
+      }
+
+      .image-section {
+        text-align: center;
+      }
+
+      .image-upload {
+        border: 2px dashed #444;
+        border-radius: 50%;
+        width: 150px;
+        height: 150px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: #2a2a2a;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .image-upload:hover {
+        border-color: #666;
+        background: #333;
+      }
+
+      .image-upload i {
+        font-size: 40px;
+        color: #888;
+        margin-bottom: 8px;
+        display: block;
+      }
+
+      .image-upload span {
+        color: #aaa;
+        font-size: 12px;
+        padding: 0 10px;
+        line-height: 1.3;
+      }
+
+      #img-input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+      }
+
+      .preview-container {
+        position: relative;
+        width: 150px;
+        height: 150px;
+        margin: 0 auto;
+        display: none; /* Hidden by default */
+      }
+
+      #preview {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #444;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .preview-show {
+        display: block !important;
+      }
+
+      .image-upload.hide-upload {
+        display: none !important;
+      }
+
+      .preview-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        color: white;
+        font-size: 12px;
+        text-align: center;
+        padding: 20px;
+        cursor: pointer;
+      }
+
+      .preview-container:hover .preview-overlay {
+        opacity: 1;
+      }
+
+      .preview-overlay i {
+        font-size: 24px;
+        margin-bottom: 8px;
+        color: #ccc;
+      }
+
+      .save-btn {
+        width: 100%;
+        padding: 14px;
+        background: #333;
+        color: white;
+        border: 1px solid #444;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .save-btn:hover {
+        background: #444;
+        border-color: #555;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      .save-btn:active {
+        transform: translateY(0);
+        background: #2a2a2a;
+      }
+
+      .save-btn i {
+        font-size: 18px;
+      }
+
+      .save-btn:disabled {
+        background: #2a2a2a;
+        border-color: #333;
+        color: #777;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .error-message {
+        color: #ff6b6b;
+        font-size: 12px;
+        margin-top: 5px;
+        display: none;
+        text-align: center;
+      }
+
+      .success-message {
+        background: #444;
+        color: white;
+        padding: 12px;
+        border-radius: 8px;
+        text-align: center;
+        margin-top: 20px;
+        display: none;
+        animation: slideUp 0.3s ease;
+        border: 1px solid #555;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .footer {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 12px;
+        color: #777;
+      }
+
+      .fa-cog {
+        color: #888;
+      }
+
+      .fa-user,
+      .fa-lock,
+      .fa-image,
+      .fa-save,
+      .fa-check-circle,
+      .fa-spinner,
+      .fa-check {
+        color: #aaa;
+      }
+
+      .fa-cloud-upload-alt {
+        color: #888;
+      }
+    </style>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="settings-container">
+      <div class="header">
+        <h2><i class="fas fa-cog"></i> User Settings</h2>
+        <p>Customize your Kalam experience</p>
+      </div>
+
+      <div class="form-group">
+        <label for="username-input"><i class="fas fa-user"></i> Username</label>
+        <div class="input-group">
+          <input
+            type="text"
+            id="username-input"
+            placeholder="Enter your username"
+          />
+        </div>
+        <div class="error-message" id="username-error">
+          Username cannot be empty
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="pass-input"><i class="fas fa-lock"></i> Password</label>
+        <div class="input-group">
+          <input
+            type="password"
+            id="pass-input"
+            placeholder="Enter new password"
+          />
+          <button type="button" class="toggle-password" id="toggle-password">
+            <i class="far fa-eye"></i>
+          </button>
+        </div>
+        <div class="error-message" id="password-error">
+          Password must be at least 6 characters
+        </div>
+      </div>
+
+      <div class="form-group image-section">
+        <label><i class="fas fa-image"></i> Profile Image</label>
+
+        <!-- Upload area -->
+        <div class="image-upload" id="image-upload-area">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <span>Click to upload profile picture</span>
+          <input type="file" id="img-input" accept="image/*" />
+        </div>
+
+        <!-- Preview area -->
+        <div class="preview-container" id="preview-container">
+          <img id="preview" alt="Profile preview" />
+          <div class="preview-overlay">
+            <i class="fas fa-camera"></i>
+            Change image
+          </div>
+        </div>
+
+        <div class="error-message" id="image-error">
+          Please select a valid image file
+        </div>
+      </div>
+
+      <button id="save-btn" class="save-btn">
+        <i class="fas fa-save"></i> Save Settings
+      </button>
+
+      <div class="success-message" id="success-message">
+        <i class="fas fa-check-circle"></i> Settings saved successfully!
+      </div>
+
+      <div class="footer">
+        <p>Changes will take effect on next login</p>
+      </div>
+    </div>
+
+    <script>
+      const { ipcRenderer } = require('electron');
+
+      // DOM Elements
+      const imgInput = document.getElementById('img-input');
+      const preview = document.getElementById('preview');
+      const imageUploadArea = document.getElementById('image-upload-area');
+      const previewContainer = document.getElementById('preview-container');
+      const togglePasswordBtn = document.getElementById('toggle-password');
+      const passInput = document.getElementById('pass-input');
+      const saveBtn = document.getElementById('save-btn');
+      const successMessage = document.getElementById('success-message');
+      const usernameInput = document.getElementById('username-input');
+
+      // Check if there's an existing image on load
+      window.addEventListener('load', () => {
+        // Check if there's a saved profile image
+        // You'll need to implement this based on your storage
+        checkExistingImage();
+      });
+
+      // Toggle password visibility
+      togglePasswordBtn.addEventListener('click', () => {
+        const type =
+          passInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passInput.setAttribute('type', type);
+        togglePasswordBtn.innerHTML =
+          type === 'password'
+            ? '<i class="far fa-eye"></i>'
+            : '<i class="far fa-eye-slash"></i>';
+      });
+
+      // Image upload handling
+      function setupImageUpload() {
+        // Click on upload area triggers file input
+        imageUploadArea.addEventListener('click', (e) => {
+          if (e.target !== imgInput) {
+            imgInput.click();
+          }
+        });
+
+        // Click on preview or overlay triggers file input
+        previewContainer.addEventListener('click', () => {
+          imgInput.click();
+        });
+
+        // Drag and drop handlers for upload area
+        imageUploadArea.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          imageUploadArea.style.borderColor = '#666';
+          imageUploadArea.style.background = '#333';
+        });
+
+        imageUploadArea.addEventListener('dragleave', () => {
+          imageUploadArea.style.borderColor = '#444';
+          imageUploadArea.style.background = '#2a2a2a';
+        });
+
+        imageUploadArea.addEventListener('drop', (e) => {
+          e.preventDefault();
+          imageUploadArea.style.borderColor = '#444';
+          imageUploadArea.style.background = '#2a2a2a';
+
+          if (e.dataTransfer.files.length) {
+            imgInput.files = e.dataTransfer.files;
+            updateImagePreview(e.dataTransfer.files[0]);
+          }
+        });
+
+        imgInput.addEventListener('change', (e) => {
+          if (e.target.files.length) {
+            updateImagePreview(e.target.files[0]);
+          }
+        });
+      }
+
+      function updateImagePreview(file) {
+        if (!file.type.match('image.*')) {
+          showError('image-error', 'Please select a valid image file');
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          preview.src = e.target.result;
+          showPreview();
+          hideError('image-error');
+        };
+        reader.readAsDataURL(file);
+      }
+
+      function showPreview() {
+        previewContainer.classList.add('preview-show');
+        imageUploadArea.classList.add('hide-upload');
+      }
+
+      function showUploadArea() {
+        previewContainer.classList.remove('preview-show');
+        imageUploadArea.classList.remove('hide-upload');
+      }
+
+      // Form validation - allows empty username
+      function validateForm() {
+        let isValid = true;
+
+        // Only validate password if provided
+        if (passInput.value && passInput.value.length < 6) {
+          showError('password-error', 'Password must be at least 6 characters');
+          isValid = false;
+        } else {
+          hideError('password-error');
+        }
+
+        // Username is optional, so no validation needed
+        hideError('username-error');
+
+        return isValid;
+      }
+
+      function showError(elementId, message) {
+        const errorEl = document.getElementById(elementId);
+        errorEl.textContent = message;
+        errorEl.style.display = 'block';
+      }
+
+      function hideError(elementId) {
+        document.getElementById(elementId).style.display = 'none';
+      }
+
+      // Save settings
+      saveBtn.addEventListener('click', async () => {
+        if (!validateForm()) return;
+
+        const newUsername = usernameInput.value.trim();
+        const newPass = passInput.value;
+        const imgFile = imgInput.files[0];
+
+        // Disable button and show loading
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+        try {
+          // Send username (even if empty)
+          ipcRenderer.send('update-username', newUsername || '');
+
+          // Send password if changed
+          if (newPass) {
+            ipcRenderer.send('update-password', newPass);
+          }
+
+          // Send image if selected
+          if (imgFile) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              const base64Image = e.target.result;
+              ipcRenderer.send('update-image', base64Image);
+
+              // Show success and refresh main page
+              showSuccessAndClose();
+            };
+            reader.readAsDataURL(imgFile);
+          } else {
+            // No image selected, just show success
+            showSuccessAndClose();
+          }
+        } catch (error) {
+          console.error('Error saving settings:', error);
+          saveBtn.innerHTML = '<i class="fas fa-save"></i> Save Settings';
+          saveBtn.disabled = false;
+        }
+      });
+
+      // Helper function to show success and refresh main page
+      function showSuccessAndClose() {
+        successMessage.style.display = 'block';
+        saveBtn.innerHTML = '<i class="fas fa-check"></i> Saved!';
+
+        // Send refresh signal to main window
+        ipcRenderer.send('settings-saved');
+
+        // Close settings window after delay
+        setTimeout(() => {
+          window.close();
+        }, 1500);
+      }
+
+      // Enter key support
+      document.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          saveBtn.click();
+        }
+      });
+
+      // Initialize
+      setupImageUpload();
+    </script>
+  </body>
+</html>
